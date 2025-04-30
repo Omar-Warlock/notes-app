@@ -10,7 +10,7 @@ function Navbar({
   editingNote,
   setEditingNote,
   searchTerm,
-  setSearchTerm
+  setSearchTerm,
 }) {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -18,12 +18,12 @@ function Navbar({
     title: "",
     description: "",
     category: "Personal",
-    due: new Date().toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    due: new Date().toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     }),
-    checked: false
+    checked: false,
   });
 
   // Initialize form when editingNote changes
@@ -38,34 +38,33 @@ function Navbar({
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Format the date properly
-    const formattedNote = {
+
+    const noteData = {
       ...formData,
-      due: formData.due || new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      })
+      id: Date.now(),  
+      due:
+        formData.due ||
+        new Date().toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
     };
 
     if (editingNote) {
-      onUpdateNote(formattedNote);
+      onUpdateNote(noteData); // For editing existing notes
     } else {
-      onAddNote({
-        ...formattedNote,
-        id: Date.now() // Generate new ID for new notes
-      });
+      onAddNote(noteData); // For new notes - this updates the state
     }
 
-    resetForm();
     setShowModal(false);
+    resetForm();
   };
 
   const resetForm = () => {
@@ -74,12 +73,12 @@ function Navbar({
       title: "",
       description: "",
       category: "Personal",
-      due: new Date().toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
+      due: new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       }),
-      checked: false
+      checked: false,
     });
   };
 
@@ -106,8 +105,8 @@ function Navbar({
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <button 
-                className="btn add-btn fw-semibold rounded-pill fs-5" 
+              <button
+                className="btn add-btn fw-semibold rounded-pill fs-5"
                 type="button"
                 onClick={() => {
                   setEditingNote(null);
@@ -122,25 +121,29 @@ function Navbar({
       </nav>
 
       {/* Add/Edit Note Modal */}
-      <div className={`modal fade ${showModal ? 'show' : ''}`} 
-           style={{ display: showModal ? 'block' : 'none' }} 
-           tabIndex="-1">
+      <div
+        className={`modal fade ${showModal ? "show" : ""}`}
+        style={{ display: showModal ? "block" : "none" }}
+        tabIndex="-1"
+      >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">
                 {editingNote ? "Edit Note" : "Add New Note"}
               </h5>
-              <button 
-                type="button" 
-                className="btn-close" 
+              <button
+                type="button"
+                className="btn-close"
                 onClick={handleCloseModal}
               ></button>
             </div>
             <form onSubmit={handleSubmit}>
               <div className="modal-body">
                 <div className="mb-3">
-                  <label htmlFor="noteTitle" className="form-label">Title *</label>
+                  <label htmlFor="noteTitle" className="form-label">
+                    Title *
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -152,7 +155,9 @@ function Navbar({
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="noteDescription" className="form-label">Description *</label>
+                  <label htmlFor="noteDescription" className="form-label">
+                    Description *
+                  </label>
                   <textarea
                     className="form-control"
                     id="noteDescription"
@@ -164,28 +169,34 @@ function Navbar({
                   ></textarea>
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="noteDueDate" className="form-label">Due Date</label>
+                  <label htmlFor="noteDueDate" className="form-label">
+                    Due Date
+                  </label>
                   <input
                     type="date"
                     className="form-control"
                     id="noteDueDate"
                     name="due"
-                    value={formData.due ? new Date(formData.due).toISOString().split('T')[0] : ""}
+                    value={
+                      formData.due
+                        ? new Date(formData.due).toISOString().split("T")[0]
+                        : ""
+                    }
                     onChange={(e) => {
-                      const selectedDate = e.target.value 
-                        ? new Date(e.target.value).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
+                      const selectedDate = e.target.value
+                        ? new Date(e.target.value).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
                           })
                         : "";
-                      setFormData({...formData, due: selectedDate});
+                      setFormData({ ...formData, due: selectedDate });
                     }}
                   />
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Category *</label>
-                  {["Personal", "Home", "Business"].map(cat => (
+                  {["Personal", "Home", "Business"].map((cat) => (
                     <div className="form-check" key={cat}>
                       <input
                         className="form-check-input"
@@ -197,7 +208,10 @@ function Navbar({
                         onChange={handleInputChange}
                         required
                       />
-                      <label className="form-check-label" htmlFor={`${cat.toLowerCase()}Category`}>
+                      <label
+                        className="form-check-label"
+                        htmlFor={`${cat.toLowerCase()}Category`}
+                      >
                         {cat}
                       </label>
                     </div>
@@ -210,7 +224,9 @@ function Navbar({
                     id="noteCompleted"
                     name="checked"
                     checked={formData.checked}
-                    onChange={(e) => setFormData({...formData, checked: e.target.checked})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, checked: e.target.checked })
+                    }
                   />
                   <label className="form-check-label" htmlFor="noteCompleted">
                     Mark as completed
@@ -218,9 +234,9 @@ function Navbar({
                 </div>
               </div>
               <div className="modal-footer">
-                <button 
-                  type="button" 
-                  className="btn btn-secondary" 
+                <button
+                  type="button"
+                  className="btn btn-secondary"
                   onClick={handleCloseModal}
                 >
                   Cancel
@@ -243,7 +259,9 @@ function Navbar({
             {["ALL", "Personal", "Home", "Business"].map((cat) => (
               <li className="nav-item" key={cat}>
                 <button
-                  className={`nav-link ${activeCategory === cat ? "active" : ""}`}
+                  className={`nav-link ${
+                    activeCategory === cat ? "active" : ""
+                  }`}
                   onClick={() => setActiveCategory(cat)}
                 >
                   {cat.toUpperCase()}

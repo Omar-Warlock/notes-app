@@ -1,3 +1,4 @@
+import notFound from '../assets/noNotes.png'
 function Notes({ notes, onToggle, onEdit, onDelete }) {
   return (
     <section className="container py-5">
@@ -49,7 +50,8 @@ function Notes({ notes, onToggle, onEdit, onDelete }) {
           ))
         ) : (
           <div className="col-12 text-center py-5">
-            <h4>No notes found</h4>
+            <img src={notFound} className='w-50  d-block' alt="No Notes Yet" />
+            <h4 className='mx-auto mt-5'>No notes found</h4>
             <p>Try changing your filters or add a new note</p>
           </div>
         )}
